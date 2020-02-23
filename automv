@@ -7,14 +7,30 @@ require 'json'
 
 $plan_file = ARGV.shift
 
+# Refer address in https://www.terraform.io/docs/internals/json-format.html#plan-representation
+class ResourceAddress
+  def initialize(str_address)
+    @str_address = str_address
+    levels = @str_address.split('.')
+    @resource_type = levels[-2]
+    @resource_name = levels[-1]
+  end
+
+  def to_s
+    @str_address
+  end
+end
+
 def print_specific_action_resources(action_name)
-  puts '# $action_name'
+  puts "# #{action_name}"
   tree = File.open($plan_file) do |file|
     JSON.load(file)
   end
-  p tree['resource_changes'].
+  resource_addresses = tree['resource_changes'].
     select { |c| c['change']['actions'][0] == action_name }.
-    map { |c| c['address'] }
+    map { |c| c['address'] }.
+    map { |c| ResourceAddress.new(c) }
+  puts resource_addresses
   puts
 end
 
