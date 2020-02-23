@@ -1,26 +1,24 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ruby
 
-set -eu
-# set -x
+require 'json'
 
 # terraform show -json plan-result
 # terraform show -json plan-result > plan-result.json
 
-jq --version
-plan_file=$1
+$plan_file = ARGV.shift
 
-function print_specific_action_resources() {
-  action_name=$1
-  echo "# $action_name"
-  cat $plan_file |
-    jq -r \
-      '.resource_changes[] |
-      select(.change.actions[0] == "'$action_name'") |
-      .address'
-  echo ''
-}
+def print_specific_action_resources(action_name)
+  puts '# $action_name'
+  tree = File.open($plan_file) do |file|
+    JSON.load(file)
+  end
+  p tree['resource_changes'].
+    select { |c| c['change']['actions'][0] == action_name }.
+    map { |c| c['address'] }
+  puts
+end
 
-# https://github.com/hashicorp/terraform-json/blob/7bf4a174/action.go#L11-L26
+# # https://github.com/hashicorp/terraform-json/blob/7bf4a174/action.go#L11-L26
 print_specific_action_resources 'create'
 print_specific_action_resources 'update'
 print_specific_action_resources 'delete'
