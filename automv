@@ -8,33 +8,66 @@ require 'json'
 $plan_file = ARGV.shift
 
 # Refer address in https://www.terraform.io/docs/internals/json-format.html#plan-representation
-class ResourceAddress
-  def initialize(str_address)
-    @str_address = str_address
-    levels = @str_address.split('.')
-    @resource_type = levels[-2]
-    @resource_name = levels[-1]
+class Resource
+  def initialize(tree)
+    @address = tree['address']
+    @type = tree['type']
+    @name = tree['name']
+    @change = tree['change']
+  end
+
+  attr_reader 'type'
+  attr_reader 'name'
+
+  def same(another)
+    @type == another.type
   end
 
   def to_s
-    @str_address
+    @address
   end
 end
 
-def print_specific_action_resources(action_name)
-  puts "# #{action_name}"
-  tree = File.open($plan_file) do |file|
-    JSON.load(file)
-  end
-  resource_addresses = tree['resource_changes'].
-    select { |c| c['change']['actions'][0] == action_name }.
-    map { |c| c['address'] }.
-    map { |c| ResourceAddress.new(c) }
-  puts resource_addresses
+def print_specific_action_resources(action)
+  puts "# #{action}"
+  puts filter_actions(action)
   puts
 end
 
+
+$tree = File.open($plan_file) do |file|
+  JSON.load(file)
+end
+$resource_changes = $tree['resource_changes']
+
 # # https://github.com/hashicorp/terraform-json/blob/7bf4a174/action.go#L11-L26
+def filter_actions(action)
+  $resource_changes.
+    select { |rc| rc['change']['actions'].length }.
+    select { |rc| rc['change']['actions'][0] == action }.
+    map { |rc| Resource.new(rc) }
+end
+
 print_specific_action_resources 'create'
-print_specific_action_resources 'update'
 print_specific_action_resources 'delete'
+
+$creating_resources = filter_actions('create')
+$deleting_resources = filter_actions('delete')
+
+def infer_move()
+  infered_moves = $deleting_resources.map do |dr|
+    infered = $creating_resources.find do |cr|
+      dr.same(cr)
+    end
+    if infered
+      [dr, infered]
+    else
+      nil
+    end
+  end
+  infered_moves.compact
+end
+
+infer_move().each do |dr, cr|
+  print dr, ' -> ', cr
+end
