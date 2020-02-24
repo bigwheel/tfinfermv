@@ -2,7 +2,7 @@
 
 require 'json'
 
-# terraform show -json plan-result
+# terraform plan -out=./plan-result
 # terraform show -json plan-result > plan-result.json
 
 $plan_file = ARGV.shift
