@@ -54,3 +54,12 @@ get_automv_line_count() {
   result_line_count=$(get_automv_line_count)
   [[[ $result_line_count -eq 1 ]]]
 }
+
+@test "no output when content and name change" {
+  base_apply
+
+  cp ../name_content_change.tf conf.tf
+
+  result_line_count=$(get_automv_line_count)
+  [[[ $result_line_count -eq 0 ]]]
+}
