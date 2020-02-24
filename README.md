@@ -20,7 +20,7 @@ For more details, see [this test case](https://github.com/bigwheel/tfinfermv/blo
 
 ### Similarity Threshold
 
-How many property values need for same resource determination.
+How many property values are needed for same resource determination.
 
 If you change only one name of single resource, property values does not changed.
 Then you don't have to change Similarity Threshold from 1.0.
