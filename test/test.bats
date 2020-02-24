@@ -24,11 +24,11 @@ base_apply() {
   terraform apply -auto-approve
 }
 
-get_automv_line_count() {
+get_infermv_line_count() {
   similarity_threshold=${1:-1.0}
   terraform plan -out=./plan-result > /dev/null 2>&1
   terraform show -json plan-result > plan-result.json 2> /dev/null
-  ../../automv plan-result.json $similarity_threshold | wc -l
+  ../../infermv plan-result.json $similarity_threshold | wc -l
 }
 
 
@@ -43,7 +43,7 @@ get_automv_line_count() {
 @test "no output when no changes" {
   base_apply
 
-  result_line_count=$(get_automv_line_count)
+  result_line_count=$(get_infermv_line_count)
   [[[ $result_line_count -eq 0 ]]]
 }
 
@@ -52,7 +52,7 @@ get_automv_line_count() {
 
   cp ../name_change.tf conf.tf
 
-  result_line_count=$(get_automv_line_count)
+  result_line_count=$(get_infermv_line_count)
   [[[ $result_line_count -eq 1 ]]]
 }
 
@@ -61,7 +61,7 @@ get_automv_line_count() {
 
   cp ../name_content_change.tf conf.tf
 
-  result_line_count=$(get_automv_line_count)
+  result_line_count=$(get_infermv_line_count)
   [[[ $result_line_count -eq 0 ]]]
 }
 
@@ -70,7 +70,7 @@ get_automv_line_count() {
 
   cp ../name_content_change.tf conf.tf
 
-  result_line_count=$(get_automv_line_count 0.9)
+  result_line_count=$(get_infermv_line_count 0.9)
   [[[ $result_line_count -eq 0 ]]]
 }
 
@@ -79,6 +79,6 @@ get_automv_line_count() {
 
   cp ../name_content_change.tf conf.tf
 
-  result_line_count=$(get_automv_line_count 0.7)
+  result_line_count=$(get_infermv_line_count 0.7)
   [[[ $result_line_count -eq 1 ]]]
 }
