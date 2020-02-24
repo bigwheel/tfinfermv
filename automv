@@ -14,17 +14,44 @@ class Resource
     @type = tree['type']
     @name = tree['name']
     @change = tree['change']
+    @before = tree['change']['before']
+    @after = tree['change']['after']
   end
 
   attr_reader 'type'
   attr_reader 'name'
+  attr_reader 'before'
+  attr_reader 'after'
 
+  # self must be 'delete' resource and another must be 'create' it
   def same(another)
-    @type == another.type
+    return false if @type != another.type
+    compare(before, another.after)
   end
 
   def to_s
     @address
+  end
+
+  private
+
+  # terraform cannot distinguish nil, blank hash and blank string
+  def is_blank?(obj)
+    obj == nil || obj == {} || obj == ''
+  end
+
+  def compare(lhs, rhs)
+    if is_blank?(lhs) && is_blank?(rhs)
+      true
+    elsif lhs.instance_of?(Hash) && rhs.instance_of?(Hash)
+      compare_results = (lhs.keys & rhs.keys).
+        map { |key| compare(lhs[key], rhs[key]) }.
+        map { |com_result| com_result ? 1.0 : 0.0 }
+      similarity = compare_results.sum / compare_results.length
+      similarity == 1.0
+    else
+      lhs == rhs
+    end
   end
 end
 
