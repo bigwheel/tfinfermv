@@ -59,6 +59,7 @@ def infer_move()
   infered_moves.compact
 end
 
+# in unix manner, output under tsv
 infer_move().each do |dr, cr|
-  print dr, ' -> ', cr
+  print dr, "\t", cr, "\n"
 end

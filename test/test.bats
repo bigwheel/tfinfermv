@@ -2,6 +2,9 @@
 
 source power-assert.bash
 
+##################################################
+# Setup & Teardown
+##################################################
 
 setup() {
   rm -rf tmp
@@ -9,7 +12,11 @@ setup() {
 }
 
 
-@test "terraform works correctly" {
+##################################################
+# Shared
+##################################################
+
+base_apply() {
   cp conf.tf tmp
   cd tmp
 
@@ -17,15 +24,33 @@ setup() {
   terraform apply -auto-approve
 }
 
-@test "no output when no changes" {
-  cp conf.tf tmp
-  cd tmp
+get_automv_line_count() {
+  terraform plan -out=./plan-result > /dev/null 2>&1
+  terraform show -json plan-result > plan-result.json 2> /dev/null
+  ../../automv plan-result.json | wc -l
+}
 
-  terraform init
-  terraform apply -auto-approve
-  terraform plan -out=./plan-result
-  terraform show -json plan-result > plan-result.json
-  result_line_count=$(../../automv plan-result.json | wc -l)
-  echo $result_line_count
+
+##################################################
+# Test
+##################################################
+
+@test "terraform works correctly" {
+  base_apply
+}
+
+@test "no output when no changes" {
+  base_apply
+
+  result_line_count=$(get_automv_line_count)
   [[[ $result_line_count -eq 0 ]]]
+}
+
+@test "1 line output when resource name changes" {
+  base_apply
+
+  cp ../name_change.tf conf.tf
+
+  result_line_count=$(get_automv_line_count)
+  [[[ $result_line_count -eq 1 ]]]
 }
