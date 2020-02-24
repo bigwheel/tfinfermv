@@ -1,5 +1,7 @@
 # Terraform infer move tool
 
+![CI](https://github.com/bigwheel/tfinfermv/workflows/CI/badge.svg)
+
 ## What's this ?
 
 An script that infers terraform resource move and generates 'terraform state mv ...' commands.
