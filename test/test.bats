@@ -25,9 +25,10 @@ base_apply() {
 }
 
 get_automv_line_count() {
+  similarity_threshold=${1:-1.0}
   terraform plan -out=./plan-result > /dev/null 2>&1
   terraform show -json plan-result > plan-result.json 2> /dev/null
-  ../../automv plan-result.json | wc -l
+  ../../automv plan-result.json $similarity_threshold | wc -l
 }
 
 
@@ -62,4 +63,22 @@ get_automv_line_count() {
 
   result_line_count=$(get_automv_line_count)
   [[[ $result_line_count -eq 0 ]]]
+}
+
+@test "no output when content and name change and similarity threshold is 0.9" {
+  base_apply
+
+  cp ../name_content_change.tf conf.tf
+
+  result_line_count=$(get_automv_line_count 0.9)
+  [[[ $result_line_count -eq 0 ]]]
+}
+
+@test "1 line output when content and name change and similarity threshold is 0.7" {
+  base_apply
+
+  cp ../name_content_change.tf conf.tf
+
+  result_line_count=$(get_automv_line_count 0.7)
+  [[[ $result_line_count -eq 1 ]]]
 }

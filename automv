@@ -6,6 +6,7 @@ require 'json'
 # terraform show -json plan-result > plan-result.json
 
 $plan_file = ARGV.shift
+$similarity_threashold = (ARGV.shift || '1.0').to_f
 
 # Refer address in https://www.terraform.io/docs/internals/json-format.html#plan-representation
 class Resource
@@ -67,7 +68,7 @@ $deleting_resources = resources.select { |r| r.actions == 'delete' }
 def infer_move()
   infered_moves = $deleting_resources.map do |dr|
     infered_resource = $creating_resources.find do |cr|
-      dr.similarity(cr) == 1.0
+      $similarity_threashold <= dr.similarity(cr)
     end
     if infered_resource
       [dr, infered_resource]
