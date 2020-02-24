@@ -1,0 +1,19 @@
+# https://github.com/marketplace/actions/setup-bats-testing-framework
+name: "CI"
+on: [push, pull_request]
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Check out code
+        uses: actions/checkout@v1
+
+      - name: Setup BATS
+        uses: mig4/setup-bats@master
+        with:
+          bats-version: 1.1.0
+
+      - name: Test
+        run: cd test && ./test.bats
