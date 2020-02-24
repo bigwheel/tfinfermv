@@ -13,13 +13,18 @@ class Resource
     @address = tree['address']
     @type = tree['type']
     @name = tree['name']
+
     @change = tree['change']
+    @actions = tree['change']['actions'].join('-')
     @before = tree['change']['before']
     @after = tree['change']['after']
   end
 
   attr_reader 'type'
   attr_reader 'name'
+
+  # https://github.com/hashicorp/terraform-json/blob/7bf4a174/action.go#L11-L26
+  attr_reader 'actions'
   attr_reader 'before'
   attr_reader 'after'
 
@@ -56,21 +61,10 @@ class Resource
 end
 
 
-$tree = File.open($plan_file) do |file|
-  JSON.load(file)
-end
-$resource_changes = $tree['resource_changes']
-
-# # https://github.com/hashicorp/terraform-json/blob/7bf4a174/action.go#L11-L26
-def filter_actions(action)
-  $resource_changes.
-    select { |rc| rc['change']['actions'].length }.
-    select { |rc| rc['change']['actions'][0] == action }.
-    map { |rc| Resource.new(rc) }
-end
-
-$creating_resources = filter_actions('create')
-$deleting_resources = filter_actions('delete')
+$tree = File.open($plan_file) { |file| JSON.load(file) }
+resources = $tree['resource_changes'].map { |rc| Resource.new(rc) }
+$creating_resources = resources.select { |r| r.actions == 'create' }
+$deleting_resources = resources.select { |r| r.actions == 'delete' }
 
 def infer_move()
   infered_moves = $deleting_resources.map do |dr|
