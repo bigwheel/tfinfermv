@@ -1,0 +1,124 @@
+{
+  "format_version": "0.1",
+  "terraform_version": "0.12.21",
+  "planned_values": {
+    "root_module": {
+      "resources": [
+        {
+          "address": "local_file.bar",
+          "mode": "managed",
+          "type": "local_file",
+          "name": "bar",
+          "provider_name": "local",
+          "schema_version": 0,
+          "values": {
+            "content": "bar!",
+            "content_base64": null,
+            "directory_permission": "0777",
+            "file_permission": "0777",
+            "filename": "foo.bar",
+            "sensitive_content": null
+          }
+        }
+      ]
+    }
+  },
+  "resource_changes": [
+    {
+      "address": "local_file.bar",
+      "mode": "managed",
+      "type": "local_file",
+      "name": "bar",
+      "provider_name": "local",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "content": "bar!",
+          "content_base64": null,
+          "directory_permission": "0777",
+          "file_permission": "0777",
+          "filename": "foo.bar",
+          "sensitive_content": null
+        },
+        "after_unknown": {
+          "id": true
+        }
+      }
+    },
+    {
+      "address": "local_file.foo",
+      "mode": "managed",
+      "type": "local_file",
+      "name": "foo",
+      "provider_name": "local",
+      "change": {
+        "actions": [
+          "delete"
+        ],
+        "before": {
+          "content": "foo!",
+          "content_base64": null,
+          "directory_permission": "0777",
+          "file_permission": "0777",
+          "filename": "foo.bar",
+          "id": "4bf3e335199107182c6f7638efaad377acc7f452",
+          "sensitive_content": null
+        },
+        "after": null,
+        "after_unknown": {}
+      }
+    }
+  ],
+  "prior_state": {
+    "format_version": "0.1",
+    "terraform_version": "0.12.21",
+    "values": {
+      "root_module": {
+        "resources": [
+          {
+            "address": "local_file.foo",
+            "mode": "managed",
+            "type": "local_file",
+            "name": "foo",
+            "provider_name": "local",
+            "schema_version": 0,
+            "values": {
+              "content": "foo!",
+              "content_base64": null,
+              "directory_permission": "0777",
+              "file_permission": "0777",
+              "filename": "foo.bar",
+              "id": "4bf3e335199107182c6f7638efaad377acc7f452",
+              "sensitive_content": null
+            }
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "root_module": {
+      "resources": [
+        {
+          "address": "local_file.bar",
+          "mode": "managed",
+          "type": "local_file",
+          "name": "bar",
+          "provider_config_key": "local",
+          "expressions": {
+            "content": {
+              "constant_value": "bar!"
+            },
+            "filename": {
+              "constant_value": "foo.bar"
+            }
+          },
+          "schema_version": 0
+        }
+      ]
+    }
+  }
+}
