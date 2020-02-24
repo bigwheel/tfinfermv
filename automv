@@ -56,11 +56,11 @@ $deleting_resources = filter_actions('delete')
 
 def infer_move()
   infered_moves = $deleting_resources.map do |dr|
-    infered = $creating_resources.find do |cr|
+    infered_resource = $creating_resources.find do |cr|
       dr.same(cr)
     end
-    if infered
-      [dr, infered]
+    if infered_resource
+      [dr, infered_resource]
     else
       nil
     end
