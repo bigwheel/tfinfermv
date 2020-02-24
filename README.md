@@ -16,6 +16,8 @@ Put `generate_state_mv.sh` and `infermv` files into your $PATH directory.
 1. Change your configuration files
 1. Run `generate_state_mv.sh {{similarity_threshold - default 1.0}}`
 
+For more details, see [this test case](https://github.com/bigwheel/tfinfermv/blob/f5d790a9/test/test.bats#L88-L94).
+
 ### Similarity Threshold
 
 How many property values need for same resource determination.
