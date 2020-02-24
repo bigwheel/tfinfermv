@@ -2,5 +2,5 @@
 
 ```bash
 cd test
-find . -name '*.bats' | entr ./test.bats
+find .. -not -path '*/\.*' | entr ./test.bats
 ```

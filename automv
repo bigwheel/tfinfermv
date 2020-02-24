@@ -28,12 +28,6 @@ class Resource
   end
 end
 
-def print_specific_action_resources(action)
-  puts "# #{action}"
-  puts filter_actions(action)
-  puts
-end
-
 
 $tree = File.open($plan_file) do |file|
   JSON.load(file)
@@ -47,9 +41,6 @@ def filter_actions(action)
     select { |rc| rc['change']['actions'][0] == action }.
     map { |rc| Resource.new(rc) }
 end
-
-print_specific_action_resources 'create'
-print_specific_action_resources 'delete'
 
 $creating_resources = filter_actions('create')
 $deleting_resources = filter_actions('delete')

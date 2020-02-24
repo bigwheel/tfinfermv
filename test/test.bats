@@ -1,5 +1,8 @@
 #!/usr/bin/env bats
 
+source power-assert.bash
+
+
 setup() {
   rm -rf .terraform terraform.tfstate foo.bar
 }
@@ -7,6 +10,7 @@ setup() {
 teardown() {
   rm -rf .terraform terraform.tfstate foo.bar plan-result plan-result.json
 }
+
 
 @test "terraform works correctly" {
   terraform init
@@ -18,5 +22,7 @@ teardown() {
   terraform apply -auto-approve
   terraform plan -out=./plan-result
   terraform show -json plan-result > plan-result.json
-  ../automv plan-result.json > result
+  result_line_count=$(../automv plan-result.json | wc -l)
+  echo $result_line_count
+  [[[ $result_line_count -eq 0 ]]]
 }
