@@ -13,7 +13,7 @@ Put `generate_state_mv.sh` and `infermv` files into your $PATH directory.
 ## How to use
 
 1. Go your Terraform root module
-1. Change your configuration files
+1. Change your [terraform configuration](https://www.terraform.io/docs/glossary.html#terraform-configuration) files
 1. Run `generate_state_mv.sh {{similarity_threshold - default 1.0}}`
 
 For more details, see [this test case](https://github.com/bigwheel/tfinfermv/blob/f5d790a9/test/test.bats#L88-L94).
@@ -38,6 +38,6 @@ resource property change commit.
 ## How to run test
 
 ```bash
-cd test
+cd $GIT_ROOT/test
 find .. -not -path '*/tmp*' -a -not -path '*/\.*' | entr ./test.bats
 ```
