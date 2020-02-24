@@ -1,6 +1,6 @@
 # Terraform infer move tool
 
-![CI](https://github.com/bigwheel/tfinfermv/workflows/CI/badge.svg)
+[![CI](https://github.com/bigwheel/tfinfermv/workflows/CI/badge.svg)](https://github.com/bigwheel/tfinfermv/actions?query=workflow%3ACI)
 
 ## What's this ?
 
