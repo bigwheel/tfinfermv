@@ -11,9 +11,9 @@ An script that infers terraform resource move and generates 'terraform state mv 
 Put `generate_state_mv.sh` and `infermv` files into your $PATH directory.
 
 ```bash
- % curl https://raw.githubusercontent.com/bigwheel/tfinfermv/master/infermv -o ~/bin/infermv
- % curl https://raw.githubusercontent.com/bigwheel/tfinfermv/master/generate_state_mv.sh -o ~/bin/generate_state_mv.sh
- % chmod +x ~/bin/infermv ~/bin/generate_state_mv.sh
+ curl https://raw.githubusercontent.com/bigwheel/tfinfermv/master/infermv -o ~/bin/infermv
+ curl https://raw.githubusercontent.com/bigwheel/tfinfermv/master/generate_state_mv.sh -o ~/bin/generate_state_mv.sh
+ chmod +x ~/bin/infermv ~/bin/generate_state_mv.sh
 ```
 
 ## How to use
