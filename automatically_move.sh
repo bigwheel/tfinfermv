@@ -15,7 +15,7 @@ while read -u 3 line; do
 
   read -p "move? (y/N): " yn
   case "$yn" in
-    [yY]*) echo $line | awk '{print "terraform state mv", $1, $2}';;
+    [yY]*) $(echo $line | awk '{print "terraform state mv", $1, $2}');;
     *) echo "skip";;
   esac
 done 3< <(infermv $plan_result_json_temp $similarity_threshold)
