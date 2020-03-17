@@ -67,11 +67,10 @@ $deleting_resources = resources.select { |r| r.actions == 'delete' }
 
 def infer_move()
   infered_moves = $deleting_resources.map do |dr|
-    infered_resource = $creating_resources.find do |cr|
-      $similarity_threashold <= dr.similarity(cr)
-    end
-    if infered_resource
-      [dr, infered_resource]
+    similarities = $creating_resources.map { |cr| dr.similarity(cr) }
+    max_similarity = similarities.max
+    if $similarity_threashold <= max_similarity
+      [dr, $creating_resources[similarities.index(max_similarity)]]
     else
       nil
     end
