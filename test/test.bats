@@ -26,11 +26,17 @@ base_apply() {
   terraform apply -auto-approve
 }
 
-get_infermv_line_count() {
-  similarity_threshold=${1:-1.0}
+get_infermv() {
+  set -eu
+  similarity_threshold=$1
   terraform plan -out=./plan-result > /dev/null 2>&1
   terraform show -json plan-result > plan-result.json 2> /dev/null
-  infermv plan-result.json $similarity_threshold | wc -l
+  infermv plan-result.json $similarity_threshold
+  set +eu
+}
+
+get_infermv_line_count() {
+  get_infermv ${1:-1.0} | wc -l
 }
 
 
@@ -83,6 +89,15 @@ get_infermv_line_count() {
 
   result_line_count=$(get_infermv_line_count 0.7)
   [[[ $result_line_count -eq 1 ]]]
+}
+
+@test "selection of best similarity resource when there are multiple candidate resources" {
+  base_apply
+
+  cp ../multiple_resource_candidates.tf conf.tf
+
+  infermv_output=$(get_infermv 0.0)
+  [[[ "$infermv_output" == "local_file.foo	local_file.bbb_less_change" ]]]
 }
 
 @test "automatic script works correctly" {
