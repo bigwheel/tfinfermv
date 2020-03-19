@@ -6,6 +6,10 @@ require 'json'
 # terraform show -json plan-result > plan-result.json
 
 $plan_file = ARGV.shift
+unless $plan_file
+  puts 'select plan file'
+  abort
+end
 $similarity_threashold = (ARGV.shift || '1.0').to_f
 
 # Refer address in https://www.terraform.io/docs/internals/json-format.html#plan-representation
