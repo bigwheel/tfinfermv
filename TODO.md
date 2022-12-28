@@ -1,1 +1,2 @@
-* Care module name / path in similarity calculation
+- Care module name / path in similarity calculation
+- golang で書き直す (配布をしやすくしたいから)
