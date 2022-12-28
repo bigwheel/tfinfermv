@@ -40,7 +40,9 @@ class Resource
   # self must be 'delete' resource and another must be 'create' it
   def similarity(another)
     return 0.0 if @type != another.type
-    Resource.compare(before, another.after)
+    similarity = Resource.compare(before, another.after) * 0.8
+    similarity += @name == another.name ? 0.2 : 0
+    similarity
   end
 
   private
