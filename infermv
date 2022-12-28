@@ -56,6 +56,7 @@ class Resource
     elsif lhs.instance_of?(Hash) && rhs.instance_of?(Hash)
       compare_results = (lhs.keys & rhs.keys).
         map { |key| compare(lhs[key], rhs[key]) }
+      return 0.0 if compare_results.length == 0
       compare_results.sum / compare_results.length
     else
       lhs == rhs ? 1.0 : 0.0
