@@ -40,18 +40,18 @@ class Resource
   # self must be 'delete' resource and another must be 'create' it
   def similarity(another)
     return 0.0 if @type != another.type
-    compare(before, another.after)
+    Resource.compare(before, another.after)
   end
 
   private
 
   # terraform cannot distinguish nil, blank hash and blank string
-  def is_blank?(obj)
+  def self.is_blank?(obj)
     obj == nil || obj == {} || obj == ''
   end
 
-  def compare(lhs, rhs)
-    if is_blank?(lhs) && is_blank?(rhs)
+  def self.compare(lhs, rhs)
+    if self.is_blank?(lhs) && self.is_blank?(rhs)
       1.0
     elsif lhs.instance_of?(Hash) && rhs.instance_of?(Hash)
       compare_results = (lhs.keys & rhs.keys).
