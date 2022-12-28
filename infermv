@@ -85,5 +85,10 @@ end
 
 # in unix manner, output under tsv
 infer_move().each do |dr, cr|
-  print dr, "\t", cr, "\n"
+  print "moved {
+  from = #{dr}
+  to = #{cr}
+}
+
+"
 end
