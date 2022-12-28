@@ -83,12 +83,14 @@ def infer_move()
   infered_moves.compact
 end
 
-# in unix manner, output under tsv
-infer_move().each do |dr, cr|
-  print "moved {
-  from = #{dr}
-  to = #{cr}
-}
+print infer_move().group_by { |dr, _| dr.type }.map { |type, moves|
+  moved_block_of_type = "# #{type}
 
 "
-end
+  moved_block_of_type << moves.map { |dr, cr|
+    "moved {
+  from = #{dr}
+  to   = #{cr}
+}"
+  }.join("\n\n")
+}.join("\n\n\n")
