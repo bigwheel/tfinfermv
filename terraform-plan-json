@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -eu
+
+plan_result_temp=$(mktemp "/tmp/${0##*/}.tmp.XXXXXX")
+
+terraform plan -out=$plan_result_temp 1>&2
+terraform show -json $plan_result_temp
