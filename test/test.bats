@@ -55,13 +55,13 @@ get_infermv_line_count() {
   [[[ $result_line_count -eq 0 ]]]
 }
 
-@test "1 line output when resource name changes" {
+@test "5 lines output when resource name changes" {
   base_apply
 
   cp ../name_change.tf conf.tf
 
-  result_line_count=$(get_infermv_line_count)
-  [[[ $result_line_count -eq 1 ]]]
+  result_line_count=$(get_infermv_line_count 0.8)
+  [[[ $result_line_count -eq 5 ]]]
 }
 
 @test "no output when content and name change" {
@@ -82,13 +82,13 @@ get_infermv_line_count() {
   [[[ $result_line_count -eq 0 ]]]
 }
 
-@test "1 line output when content and name change and similarity threshold is 0.7" {
+@test "5 lines output when content and name change and similarity threshold is 0.6" {
   base_apply
 
   cp ../name_content_change.tf conf.tf
 
-  result_line_count=$(get_infermv_line_count 0.7)
-  [[[ $result_line_count -eq 1 ]]]
+  result_line_count=$(get_infermv_line_count 0.6)
+  [[[ $result_line_count -eq 5 ]]]
 }
 
 @test "selection of best similarity resource when there are multiple candidate resources" {
@@ -96,8 +96,18 @@ get_infermv_line_count() {
 
   cp ../multiple_resource_candidates.tf conf.tf
 
+  expected=$(cat <<EOF
+# local_file
+
+moved {
+  from = local_file.foo
+  to   = local_file.bbb_less_change
+}
+EOF
+  )
+
   infermv_output=$(get_infermv 0.0)
-  [[[ "$infermv_output" == "local_file.foo	local_file.bbb_less_change" ]]]
+  [[[ "$infermv_output" == "$expected" ]]]
 }
 
 @test "automatic script works correctly" {
@@ -105,5 +115,15 @@ get_infermv_line_count() {
 
   cp ../name_content_change.tf conf.tf
 
-  [[[ "$(generate_state_mv.sh 0.7)" == "terraform state mv local_file.foo local_file.bar" ]]]
+  expected=$(cat <<EOF
+# local_file
+
+moved {
+  from = local_file.foo
+  to   = local_file.bar
+}
+EOF
+  )
+
+  [[[ "$(generate_state_mv.sh 0.6)" == "$expected" ]]]
 }
