@@ -47,3 +47,7 @@ resource property change commit.
 cd $GIT_ROOT/test
 find .. -not -path '*/tmp*' -a -not -path '*/\.*' | entr ./test.bats
 ```
+
+## Relating projects
+
+- https://github.com/busser/tfautomv
