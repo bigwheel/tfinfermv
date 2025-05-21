@@ -93,8 +93,6 @@ print infer_move().group_by { |dr, _| dr.type }.map { |type, moves|
     "moved {
   from = #{dr}
   to   = #{cr}
-}
-
-"
+}"
   }.join("\n\n")
-}.join("\n\n\n")
+}.join("\n\n\n") + "\n"
