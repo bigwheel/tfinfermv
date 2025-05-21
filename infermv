@@ -97,4 +97,4 @@ print infer_move().group_by { |dr, _| dr.type }.map { |type, moves|
 
 "
   }.join("\n\n")
-}.join("\n\n\n")
+}.join("\n\n\n") + "\n"
