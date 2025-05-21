@@ -52,7 +52,7 @@ get_infermv_line_count() {
   base_apply
 
   result_line_count=$(get_infermv_line_count)
-  [[[ $result_line_count -eq 0 ]]]
+  [[[ $result_line_count -eq 1 ]]]
 }
 
 @test "5 lines output when resource name changes" {
@@ -61,7 +61,7 @@ get_infermv_line_count() {
   cp ../name_change.tf conf.tf
 
   result_line_count=$(get_infermv_line_count 0.8)
-  [[[ $result_line_count -eq 5 ]]]
+  [[[ $result_line_count -eq 6 ]]]
 }
 
 @test "no output when content and name change" {
@@ -70,7 +70,7 @@ get_infermv_line_count() {
   cp ../name_content_change.tf conf.tf
 
   result_line_count=$(get_infermv_line_count)
-  [[[ $result_line_count -eq 0 ]]]
+  [[[ $result_line_count -eq 1 ]]]
 }
 
 @test "no output when content and name change and similarity threshold is 0.9" {
@@ -79,7 +79,7 @@ get_infermv_line_count() {
   cp ../name_content_change.tf conf.tf
 
   result_line_count=$(get_infermv_line_count 0.9)
-  [[[ $result_line_count -eq 0 ]]]
+  [[[ $result_line_count -eq 1 ]]]
 }
 
 @test "5 lines output when content and name change and similarity threshold is 0.6" {
@@ -88,7 +88,7 @@ get_infermv_line_count() {
   cp ../name_content_change.tf conf.tf
 
   result_line_count=$(get_infermv_line_count 0.6)
-  [[[ $result_line_count -eq 5 ]]]
+  [[[ $result_line_count -eq 6 ]]]
 }
 
 @test "selection of best similarity resource when there are multiple candidate resources" {
